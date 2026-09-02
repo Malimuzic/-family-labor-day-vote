@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Family Labor Day Vote</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#171717;background:#f4f4f5}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(620px,100%);background:#fff;border-radius:24px;padding:32px;box-shadow:0 14px 45px #00000012}h1{margin:0 0 8px;font-size:clamp(28px,6vw,42px);letter-spacing:-.03em}.sub{color:#666;margin:0 0 28px;line-height:1.5}.option{display:block;border:2px solid #e5e7eb;border-radius:18px;padding:20px;margin:14px 0;cursor:pointer;transition:.15s}.option:hover{border-color:#111}.option input{display:none}.option.selected{border-color:#111;background:#f5f5f5}.option strong{display:block;font-size:19px}.option span{display:block;color:#666;font-size:14px;margin-top:5px}.vote{width:100%;border:0;border-radius:16px;padding:17px;background:#111;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin-top:10px}.vote:disabled{opacity:.45;cursor:not-allowed}.note{font-size:12px;color:#777;text-align:center;margin-top:18px;line-height:1.5}.result{display:none;margin-top:26px;border-top:1px solid #eee;padding-top:24px}.bar{height:12px;background:#eee;border-radius:99px;overflow:hidden;margin:8px 0 14px}.fill{height:100%;width:0;background:#111}.count{font-size:13px;color:#666}.thanks{display:none;text-align:center;margin-top:20px;font-weight:700}
+</style>
+</head>
+<body>
+<main class="card">
+<h1>Family Labor Day Vote</h1>
+<p class="sub">Cast your anonymous vote for the Labor Day weekend plans.</p>
+<label class="option" id="stay"><input type="radio" name="vote" value="stay"><strong>🏠 Stay on Sterling for Labor Day Weekend</strong><span>Keep Aunty Tanya on Sterling for the weekend.</span></label>
+<label class="option" id="away"><input type="radio" name="vote" value="away"><strong>✈️ Go away on her hiatus</strong><span>Have Aunty Tanya go away for her hiatus.</span></label>
+<button class="vote" id="voteBtn" disabled>Submit Anonymous Vote</button>
+<div class="thanks" id="thanks">✓ Vote recorded. Thanks!</div>
+<section class="result" id="result">
+<strong>Current results</strong>
+<div class="count" id="stayCount">Stay on Sterling — 0</div><div class="bar"><div class="fill" id="stayBar"></div></div>
+<div class="count" id="awayCount">Go away — 0</div><div class="bar"><div class="fill" id="awayBar"></div></div>
+</section>
+<p class="note">No name, email, or account is requested. This page is the hosted voting interface; a shared database is required for votes to be visible across everyone's devices.</p>
+</main>
+<script>
+const options=[...document.querySelectorAll('.option')],btn=document.getElementById('voteBtn');
+options.forEach(o=>o.addEventListener('click',()=>{options.forEach(x=>x.classList.remove('selected'));o.classList.add('selected');o.querySelector('input').checked=true;btn.disabled=false;}));
+btn.addEventListener('click',()=>{const v=document.querySelector('input[name=vote]:checked')?.value;if(!v)return;localStorage.setItem('familyVote',v);btn.disabled=true;options.forEach(x=>x.style.pointerEvents='none');document.getElementById('thanks').style.display='block';});
+</script>
+</body></html>
