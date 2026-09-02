@@ -1,31 +1,34 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Family Labor Day Vote</title>
 <style>
-:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#171717;background:#f4f4f5}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(620px,100%);background:#fff;border-radius:24px;padding:32px;box-shadow:0 14px 45px #00000012}h1{margin:0 0 8px;font-size:clamp(28px,6vw,42px);letter-spacing:-.03em}.sub{color:#666;margin:0 0 28px;line-height:1.5}.option{display:block;border:2px solid #e5e7eb;border-radius:18px;padding:20px;margin:14px 0;cursor:pointer;transition:.15s}.option:hover{border-color:#111}.option input{display:none}.option.selected{border-color:#111;background:#f5f5f5}.option strong{display:block;font-size:19px}.option span{display:block;color:#666;font-size:14px;margin-top:5px}.vote{width:100%;border:0;border-radius:16px;padding:17px;background:#111;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin-top:10px}.vote:disabled{opacity:.45;cursor:not-allowed}.note{font-size:12px;color:#777;text-align:center;margin-top:18px;line-height:1.5}.result{display:none;margin-top:26px;border-top:1px solid #eee;padding-top:24px}.bar{height:12px;background:#eee;border-radius:99px;overflow:hidden;margin:8px 0 14px}.fill{height:100%;width:0;background:#111}.count{font-size:13px;color:#666}.thanks{display:none;text-align:center;margin-top:20px;font-weight:700}
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#171717;background:#f4f4f5}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(640px,100%);background:#fff;border-radius:24px;padding:32px;box-shadow:0 14px 45px #00000012}h1{margin:0 0 8px;font-size:clamp(30px,7vw,46px);letter-spacing:-.04em}.sub{color:#666;margin:0 0 26px;line-height:1.5}.option{display:flex;gap:14px;align-items:flex-start;border:2px solid #e5e7eb;border-radius:18px;padding:20px;margin:14px 0;cursor:pointer;transition:.15s}.option:hover,.option.selected{border-color:#111;background:#f7f7f7}.radio{width:20px;height:20px;border:2px solid #aaa;border-radius:50%;flex:none;margin-top:2px}.selected .radio{border:6px solid #111}.option strong{display:block;font-size:18px}.option small{display:block;color:#666;font-size:14px;margin-top:6px}.vote{width:100%;border:0;border-radius:16px;padding:17px;background:#111;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px}.vote:disabled{opacity:.45;cursor:not-allowed}.status{text-align:center;min-height:22px;margin:14px 0;color:#555}.results{display:none;margin-top:24px;border-top:1px solid #eee;padding-top:22px}.results-head{display:flex;justify-content:space-between;align-items:center}.results h2{font-size:18px;margin:0}.refresh{border:0;background:none;text-decoration:underline;cursor:pointer}.row{margin-top:16px}.rowtop{display:flex;justify-content:space-between;font-size:14px}.bar{height:11px;background:#eee;border-radius:99px;overflow:hidden;margin-top:7px}.fill{height:100%;width:0;background:#111;transition:width .35s}.total{text-align:center;color:#777;font-size:13px;margin:18px 0 0}footer{text-align:center;color:#888;font-size:12px;margin-top:22px;line-height:1.5}
 </style>
 </head>
-<body>
-<main class="card">
-<h1>Family Labor Day Vote</h1>
-<p class="sub">Cast your anonymous vote for the Labor Day weekend plans.</p>
-<label class="option" id="stay"><input type="radio" name="vote" value="stay"><strong>🏠 Stay on Sterling for Labor Day Weekend</strong><span>Keep Aunty Tanya on Sterling for the weekend.</span></label>
-<label class="option" id="away"><input type="radio" name="vote" value="away"><strong>✈️ Go away on her hiatus</strong><span>Have Aunty Tanya go away for her hiatus.</span></label>
-<button class="vote" id="voteBtn" disabled>Submit Anonymous Vote</button>
-<div class="thanks" id="thanks">✓ Vote recorded. Thanks!</div>
-<section class="result" id="result">
-<strong>Current results</strong>
-<div class="count" id="stayCount">Stay on Sterling — 0</div><div class="bar"><div class="fill" id="stayBar"></div></div>
-<div class="count" id="awayCount">Go away — 0</div><div class="bar"><div class="fill" id="awayBar"></div></div>
-</section>
-<p class="note">No name, email, or account is requested. This page is the hosted voting interface; a shared database is required for votes to be visible across everyone's devices.</p>
+<body><main class="card">
+<h1>Family Labor Day Vote</h1><p class="sub">Cast one anonymous vote for the weekend plan.</p>
+<div id="options">
+<div class="option" data-choice="stay"><span class="radio"></span><span><strong>🏠 Stay on Sterling for Labor Day weekend</strong><small>Keep Aunty Tanya with the family.</small></span></div>
+<div class="option" data-choice="away"><span class="radio"></span><span><strong>✈️ Go away on her hiatus</strong><small>Let Aunty Tanya enjoy some time away.</small></span></div>
+</div>
+<button class="vote" id="voteBtn" disabled>Submit anonymous vote</button><p class="status" id="status" aria-live="polite"></p>
+<section class="results" id="results"><div class="results-head"><h2>Live results</h2><button class="refresh" id="refresh">Refresh</button></div>
+<div class="row"><div class="rowtop"><span>Stay on Sterling</span><b id="stayCount">0</b></div><div class="bar"><div class="fill" id="stayFill"></div></div></div>
+<div class="row"><div class="rowtop"><span>Go away on hiatus</span><b id="awayCount">0</b></div><div class="bar"><div class="fill" id="awayFill"></div></div></div><p class="total" id="total">0 votes</p></section>
+<footer>Anonymous voting • one vote per browser</footer>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const options=[...document.querySelectorAll('.option')],btn=document.getElementById('voteBtn');
-options.forEach(o=>o.addEventListener('click',()=>{options.forEach(x=>x.classList.remove('selected'));o.classList.add('selected');o.querySelector('input').checked=true;btn.disabled=false;}));
-btn.addEventListener('click',()=>{const v=document.querySelector('input[name=vote]:checked')?.value;if(!v)return;localStorage.setItem('familyVote',v);btn.disabled=true;options.forEach(x=>x.style.pointerEvents='none');document.getElementById('thanks').style.display='block';});
-</script>
-</body></html>
+const SUPABASE_URL='https://fvwhbzhdiyqpxxpwdmog.supabase.co';
+const SUPABASE_KEY='sb_publishable_6ScdRbUHLBxdtNhlSKBe8w_beKGgmnD';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const options=[...document.querySelectorAll('.option')],btn=document.getElementById('voteBtn'),status=document.getElementById('status');
+let choice=null; const voted=localStorage.getItem('familyVoteSubmitted')==='1';
+options.forEach(o=>o.onclick=()=>{if(voted)return;options.forEach(x=>x.classList.remove('selected'));o.classList.add('selected');choice=o.dataset.choice;btn.disabled=false;});
+function token(){let t=localStorage.getItem('familyVoteToken');if(!t){t=crypto.randomUUID();localStorage.setItem('familyVoteToken',t)}return t}
+async function loadResults(){const {data,error}=await db.rpc('get_vote_results');if(error){console.error(error);return}let stay=0,away=0;(data||[]).forEach(r=>{if(r.choice==='stay')stay=Number(r.votes);if(r.choice==='away')away=Number(r.votes)});const total=stay+away;document.getElementById('stayCount').textContent=stay;document.getElementById('awayCount').textContent=away;document.getElementById('stayFill').style.width=(total?stay/total*100:0)+'%';document.getElementById('awayFill').style.width=(total?away/total*100:0)+'%';document.getElementById('total').textContent=total+' vote'+(total===1?'':'s');document.getElementById('results').style.display='block'}
+btn.onclick=async()=>{if(!choice)return;btn.disabled=true;status.textContent='Submitting…';const {error}=await db.rpc('cast_vote',{p_choice:choice,p_voter_token:token()});if(error){if(error.message.includes('already voted')){localStorage.setItem('familyVoteSubmitted','1');status.textContent='This browser has already voted.'}else{console.error(error);status.textContent='Could not record the vote. Try again.';btn.disabled=false;return}}else{localStorage.setItem('familyVoteSubmitted','1');status.textContent='✓ Vote recorded anonymously.'}options.forEach(x=>x.style.pointerEvents='none');await loadResults()};
+document.getElementById('refresh').onclick=loadResults;if(voted){options.forEach(x=>x.style.pointerEvents='none');btn.disabled=true;status.textContent='This browser has already voted.'}loadResults();
+</script></body></html>
