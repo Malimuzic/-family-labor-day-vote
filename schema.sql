@@ -21,12 +21,9 @@ begin
   if p_choice not in ('stay','away') then
     raise exception 'invalid choice';
   end if;
-
-  insert into public.votes(choice, voter_token)
-  values (p_choice, p_voter_token);
+  insert into public.votes(choice, voter_token) values (p_choice, p_voter_token);
 exception
-  when unique_violation then
-    raise exception 'already voted';
+  when unique_violation then raise exception 'already voted';
 end;
 $$;
 
@@ -36,9 +33,7 @@ language sql
 security definer
 set search_path = public
 as $$
-  select exists(
-    select 1 from public.votes where voter_token = p_voter_token
-  );
+  select exists(select 1 from public.votes where voter_token = p_voter_token);
 $$;
 
 create or replace function public.get_vote_results()
@@ -47,36 +42,46 @@ language sql
 security definer
 set search_path = public
 as $$
-  select v.choice, count(*)::bigint as votes
+  select v.choice, count(*)::bigint
   from public.votes v
   group by v.choice
   order by v.choice;
 $$;
 
--- Only the Supabase Auth account using this email may reset the election.
+-- Secure admin reset. The account must be authenticated AND use the authorized email.
 create or replace function public.reset_votes()
-returns void
+returns bigint
 language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  deleted_count bigint;
 begin
-  if lower(coalesce(auth.jwt() ->> 'email', '')) <> 'lowkeymali77@gmail.com' then
+  if auth.uid() is null then
+    raise exception 'not authenticated';
+  end if;
+
+  if not exists (
+    select 1
+    from auth.users u
+    where u.id = auth.uid()
+      and lower(coalesce(u.email, '')) = 'lowkeymali77@gmail.com'
+  ) then
     raise exception 'not authorized';
   end if;
 
   delete from public.votes;
+  get diagnostics deleted_count = row_count;
+  return deleted_count;
 end;
 $$;
 
 revoke all on function public.cast_vote(text, uuid) from public;
 grant execute on function public.cast_vote(text, uuid) to anon, authenticated;
-
 revoke all on function public.has_voted(uuid) from public;
 grant execute on function public.has_voted(uuid) to anon, authenticated;
-
 revoke all on function public.get_vote_results() from public;
 grant execute on function public.get_vote_results() to anon, authenticated;
-
 revoke all on function public.reset_votes() from public;
 grant execute on function public.reset_votes() to authenticated;
